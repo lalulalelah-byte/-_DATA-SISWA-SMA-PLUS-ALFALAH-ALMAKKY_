@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Siswa SMA Plus Alfalah Almakky</title>
+    <!-- Google Fonts & FontAwesome untuk Ikon -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Hubungkan file CSS eksternal -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header / Judul Aplikasi -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fa-solid fa-graduation-cap"></i> SMA Plus Alfalah Almakky</h1>
+                <p>Sistem Manajemen Data Siswa Terpadu</p>
+            </div>
+            <button id="btnTambahSiswa" class="btn-primary">
+                <i class="fa-solid fa-user-plus"></i> Tambah Siswa Baru
+            </button>
+        </header>
+
+        <!-- Kartu Statistik / Ringkasan Data -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon total"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-info">
+                    <h3 id="totalSiswa">0</h3>
+                    <p>Total Siswa</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon male"><i class="fa-solid fa-mars"></i></div>
+                <div class="stat-info">
+                    <h3 id="totalLaki">0</h3>
+                    <p>Siswa Laki-laki</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon female"><i class="fa-solid fa-venus"></i></div>
+                <div class="stat-info">
+                    <h3 id="totalPerempuan">0</h3>
+                    <p>Siswa Perempuan</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bar Pencarian & Filter -->
+        <section class="action-bar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Cari berdasarkan nama, NISN, atau alamat...">
+            </div>
+            <div class="filter-box">
+                <select id="filterKelas">
+                    <option value="">Semua Kelas</option>
+                </select>
+                <select id="filterJK">
+                    <option value="">Semua Gender</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Tabel Data Siswa -->
+        <section class="table-container">
+            <table id="tabelSiswa">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Lengkap</th>
+                        <th>Kelas</th>
+                        <th>NISN</th>
+                        <th>No HP</th>
+                        <th>Gender</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodySiswa">
+                    <!-- Data akan dimuat secara dinamis oleh JavaScript -->
+                </tbody>
+            </table>
+            <div id="emptyState" class="empty-state hidden">
+                <i class="fa-solid fa-folder-open"></i>
+                <p>Data siswa tidak ditemukan.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal Form (Tambah / Edit Siswa) -->
+    <div id="modalSiswa" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Siswa Baru</h3>
+                <span class="close-btn" id="closeModal">&times;</span>
+            </div>
+            <form id="formSiswa">
+                <input type="hidden" id="siswaId">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" required placeholder="Contoh: Ainu Zahroh">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="kelas">Kelas</label>
+                        <input type="text" id="kelas" required placeholder="Contoh: XII-B">
+                    </div>
+                    <div class="form-group">
+                        <label for="nisn">NISN</label>
+                        <input type="text" id="nisn" required placeholder="Contoh: 3098472186">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noHp">No HP</label>
+                        <input type="text" id="noHp" placeholder="Contoh: 0852xxxxxxxx atau -">
+                    </div>
+                    <div class="form-group">
+                        <label for="jk">Jenis Kelamin</label>
+                        <select id="jk" required>
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap</label>
+                    <textarea id="alamat" rows="3" required placeholder="Masukkan alamat lengkap..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btnBatal">Batal</button>
+                    <button type="submit" class="btn-primary" id="btnSimpan">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Detail Siswa -->
+    <div id="modalDetail" class="modal">
+        <div class="modal-content detail-content">
+            <div class="modal-header">
+                <h3>Detail Informasi Siswa</h3>
+                <span class="close-btn" id="closeDetail">&times;</span>
+            </div>
+            <div class="detail-body" id="detailBody">
+                <!-- Konten detail dimuat via JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-primary" id="tutupDetailBtn">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hubungkan file JavaScript eksternal -->
+    <script src="script.js"></script>
+</body>
+</html>
